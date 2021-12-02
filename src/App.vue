@@ -1,22 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <main>
+    <px-header />
+    <!-- router-view lo que hace es reemplazar el contenido de esta manera solo cambia el contenido -->
+    <router-view class="container ox-5 sm:px-20 py-20 flex justify-center" />
+  </main>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+// importar el componente con el @ es un truco por si luego lo cambien de posicion seguira encontrandolo
+import PxHeader from "@/components/PxHeader";
 
+// para poder utilzarlo debemos declararlo en "components" y para utilizarlo dentro de "template"
+// su nombre cambia de PascalCase --> kebab-case
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    PxHeader,
   },
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
