@@ -20,8 +20,6 @@ export default {
   },
 
   created() {
-    // api.getAssets();
-    //  api.getAssets().then((assets) => (this.assets = assets));
     api.getAssets().then((res) => {
       this.assets = res.data;
       console.log("esta son los assets", this.assets);
