@@ -1,29 +1,29 @@
 const url = "https://api.coincap.io/v2/assets?limit=20";
 
-let request = new Request(url, {
-  mode: "cors",
-  method: "GET",
-  headers: {
-    Accept: "application/json",
-  },
-});
-
 function getAssets() {
-  return fetch(request)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      console.log("api: ", data);
-      return data; // es necesario devolverla por que si no devuelve una promesa pendiente.
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  return (
+    fetch(url) //, {
+      // mode: "cors ",
+      //   method: "GET",
+      //   headers: {
+      //     Accept: "application/json",
+      //   },
+      // })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log("api: ", data);
+        return data; // es necesario devolverla por que si no devuelve una promesa pendiente.
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  );
   //forma de usar las promesas.
   // return new Promise((resolve, reject) => {
   //   fetch(`${url}`, {
-  //     mode: "cors",
+  //     mode: "cors ",
   //     method: "GET",
   //     headers: {
   //       Accept: "application/json",
@@ -42,6 +42,40 @@ function getAssets() {
   //     .catch((err) => reject(err));
   // });
 }
+
+function getDetail(coin) {
+  return fetch(`https://api.coincap.io/v2/assets/${coin}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      // console.log("asset: ", data);
+      return data; // es necesario devolverla por que si no devuelve una promesa pendiente.
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+function getHistory(coin) {
+  const now = new Date();
+  const end = now.getTime();
+  now.setDate(now.getDate() - 1); // seteamos una nueva fecha a la variable now
+  const start = now.getTime();
+  // console.log("inicio", start);
+  // console.log("fin", end);
+  return fetch(
+    `https://api.coincap.io/v2/assets/${coin}/history?interval=h1&start=${start}&end=${end}`
+  )
+    .then((response) => response.json())
+    .then((response) => response.data)
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 export default {
   getAssets,
+  getDetail,
+  getHistory,
 };

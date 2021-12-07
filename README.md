@@ -28,8 +28,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 > vue create name_proyecto
 
-
-
 revisar el siguiente proyecto
 https://github.com/RetaxMaster/VueTube
 
@@ -37,3 +35,9 @@ https://github.com/RetaxMaster/VueTube
 ## rutas
 para trabajar con rutas en vue 3 instalamos router/next
 > npm i vue-router@next
+
+se intalo un paquete para trabajar los numeros
+> npm i -s numeral
+
+## notas
+los filters ya no se usan para vue3 por ende se remplazan por funciones en methods o computed

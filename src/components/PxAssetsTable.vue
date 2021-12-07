@@ -22,15 +22,20 @@
         >
           <td>
             <img
+              class="w-6 h-6"
               :src="`https://static.coincap.io/assets/icons/${a.symbol.toLowerCase()}@2x.png`"
               :alt="a.name"
             />
           </td>
           <td># {{ a.rank }}</td>
           <td>{{ a.name }}</td>
-          <td>{{ a.priceUsd }}</td>
+          <td>{{ dollar(a.priceUsd) }}</td>
           <td>{{ a.marketCapUsd }}</td>
-          <td>{{ a.vwap24Hr }}</td>
+          <td
+            :class="a.changePercent24Hr < 0 ? 'text-red-600' : 'text-green-600'"
+          >
+            {{ percent(a.changePercent24Hr) }}
+          </td>
           <td class="hidden sm:block"></td>
         </tr>
       </tbody>
@@ -39,6 +44,8 @@
 </template>
 
 <script>
+import { dollarFormatter, percentFormatter } from "@/formatter";
+
 export default {
   name: "PxAssetsTable",
 
@@ -46,6 +53,14 @@ export default {
     assets: {
       type: Array,
       default: () => [],
+    },
+  },
+  methods: {
+    dollar(value) {
+      return dollarFormatter(value);
+    },
+    percent(value) {
+      return percentFormatter(value);
     },
   },
 };
