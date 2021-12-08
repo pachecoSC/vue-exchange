@@ -41,3 +41,16 @@ se intalo un paquete para trabajar los numeros
 
 ## notas
 los filters ya no se usan para vue3 por ende se remplazan por funciones en methods o computed
+
+v-bind se puede remplazar por :
+v-on se puede remplazar por @
+
+formas de navegar en rutas
+
+>this.$router.push({name: component, params:valueId})
+
+ó
+
+<router-link :to="{ name: 'coin-detail', params: { id: a.id } }">
+              {{ a.name }}</router-link
+            >
