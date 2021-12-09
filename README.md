@@ -52,5 +52,23 @@ formas de navegar en rutas
 ó
 
 <router-link :to="{ name: 'coin-detail', params: { id: a.id } }">
-              {{ a.name }}</router-link
-            >
+  {{ a.name }}</router-link
+>
+
+## ejemplo de posibles spinner
+<pulse-loader :loading="loading" :color="color" ></pulse-loader>
+<grid-loader :loading="loading" :color="color" ></grid-loader>
+<clip-loader :loading="loading" :color="color" ></clip-loader>
+<rise-loader :loading="loading" :color="color" ></rise-loader>
+<beat-loader :loading="loading" :color="color" ></beat-loader>
+<sync-loader :loading="loading" :color="color" ></sync-loader>
+<rotate-loader :loading="loading" :color="color" ></rotate-loader>
+<fade-loader :loading="loading" :color="color" :height="height" :width="width"></fade-loader>
+<pacman-loader :loading="loading" :color="color" ></pacman-loader>
+<square-loader :loading="loading" :color="color" ></square-loader>
+<scale-loader :loading="loading" :color="color" :height="height" :width="width"></scale-loader>
+<skew-loader :loading="loading" :color="color" ></skew-loader>
+<moon-loader :loading="loading" :color="color" ></moon-loader>
+<ring-loader :loading="loading" :color="color" ></ring-loader>
+<bounce-loader :loading="loading" :color="color" ></bounce-loader>
+<dot-loader :loading="loading" :color="color" ></dot-loader>
