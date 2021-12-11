@@ -74,8 +74,27 @@ function getHistory(coin) {
     });
 }
 
+function getMarkets(coin) {
+  return fetch(`https://api.coincap.io/v2/assets/${coin}/markets?limit=5`)
+    .then((response) => response.json())
+    .then((response) => response.data)
+    .catch((error) => console.log("error", error));
+}
+
+function getExchanges(id) {
+  return fetch(`https://api.coincap.io/v2/exchanges/${id}`)
+    .then((response) => response.json())
+    .then((response) => {
+      console.log(response);
+      return response.data;
+    })
+    .catch((error) => console.log("error", error));
+}
+
 export default {
   getAssets,
   getDetail,
   getHistory,
+  getMarkets,
+  getExchanges,
 };

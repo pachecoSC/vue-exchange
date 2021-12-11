@@ -2,7 +2,8 @@
   <div>
     <!-- <px-loader v-if="isLoading"></px-loader> -->
     <ring-loader :loading="isLoading" :color="'#501c94'"></ring-loader>
-    <px-assets-table v-if="!isLoading" :assets="assets" /> <!-- cuando va px-loader se usa v-else -->
+    <px-assets-table v-if="!isLoading" :assets="assets" />
+    <!-- cuando va px-loader se usa v-else -->
   </div>
 </template>
 

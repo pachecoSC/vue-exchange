@@ -48,24 +48,31 @@
             </ul>
           </div>
 
-          <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
+          <div class="my-10 sm:mt-0 justify-center text-center">
             <button
-              class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              @click="this.toggleConverter"
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-5 rounded"
             >
-              Cambiar
+              {{
+                isFromUsd ? `USD a ${asset.symbol}` : `${asset.symbol} a USD`
+              }}
             </button>
 
             <div class="flex flex-row my-5">
               <label class="w-full" for="convertValue">
                 <input
+                  v-model="ConvertValue"
                   id="convertValue"
                   type="number"
-                  class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
+                  class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 mx-4 appearance-none leading-normal"
+                  :placeholder="`Valor en ${isFromUsd ? 'USD': asset.symbol}`"
                 />
               </label>
             </div>
-
-            <span class="text-xl"></span>
+            <span class="text-xl"
+              >{{ resultConverter }} -
+              {{ isFromUsd ? asset.symbol : "USD" }}</span
+            >
           </div>
         </div>
       </div>
@@ -80,6 +87,36 @@
           "
         ></line-chart>
       </div>
+      <h3 class="text-xl my-10">Mejores ofertas de cambio</h3>
+      <table class="w-full">
+        <tr
+          v-for="m in markets"
+          :key="`${m.exchangeId} - ${m.priceUsd}`"
+          class="border-b columns-4"
+        >
+          <td>
+            <b>{{ m.exchangeId }}</b>
+          </td>
+          <td>{{ this.getDollar(m.priceUsd) }}</td>
+          <td>{{ m.baseSymbol }} / {{ m.quoteSymbol }}</td>
+          <td>
+            <px-button
+              :is-loading="m.isLoading || false"
+              v-if="!m.url"
+              @custom-click="GetUrlSite(m)"
+            >
+              <slot>Generar Url</slot>
+            </px-button>
+            <a
+              v-else
+              href="m.url"
+              class="hover:underline text-green-600"
+              target="_blanck"
+              >{{ m.url }}</a
+            >
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -90,20 +127,36 @@ import { percentFormatter, dollarFormatter } from "@/formatter";
 // import PxLoader from "@/components/PxLoader";
 import ScaleLoader from "vue-spinner/src/ScaleLoader.vue";
 
+import PxButton from "@/components/PxButton";
+
 export default {
   name: "CoinDetail",
   components: {
     ScaleLoader,
     // PxLoader,
+    PxButton,
   },
   data() {
     return {
       isLoading: false,
       asset: [],
       history: [],
+      markets: [],
+      isFromUsd: true,
+      ConvertValue: null,
     };
   },
   computed: {
+    resultConverter() {
+      if (!this.ConvertValue) {
+        return 0;
+      }
+      const result = this.isFromUsd
+        ? this.ConvertValue / this.asset.priceUsd
+        : this.ConvertValue * this.asset.priceUsd;
+
+      return result.toFixed(2);
+    },
     min() {
       return Math.min(
         ...this.history.map((x) => parseFloat(x.priceUsd).toFixed(2))
@@ -124,16 +177,45 @@ export default {
   created() {
     this.getCoin();
   },
+  watch: {
+    $route() {
+      this.ConvertValue = null;
+      this.getCoin();
+    },
+  },
+  // beforeRouteUpdate(to, from, next) {
+  //   console.log("to", to);
+  //   console.log("from", from);
+  //   next();
+  //   this.getCoin(); //ejecuta antes de hacer de hacer refresh
+  // },
   methods: {
+    toggleConverter() {
+      return (this.isFromUsd = !this.isFromUsd);
+    },
+    GetUrlSite(exchange) {
+      exchange.isLoading = true;
+      return api
+        .getExchanges(exchange.exchangeId)
+        .then((res) => {
+          exchange.url = res.exchangeUrl;
+        })
+        .finally(() => {
+          exchange.isLoading = false;
+        });
+    },
+
     getCoin() {
       this.isLoading = true;
-      console.log(this.isLoading);
+      // console.log(this.isLoading);
       const id = this.$route.params.id;
+      console.log(id);
       //Promises.all -- nos permite ejecutar varias promesialas en un ary
-      Promise.all([api.getDetail(id), api.getHistory(id)])
-        .then(([asset, history]) => {
+      Promise.all([api.getDetail(id), api.getHistory(id), api.getMarkets(id)])
+        .then(([asset, history, markets]) => {
           this.asset = asset.data;
           this.history = history;
+          this.markets = markets;
         })
         .finally(() => (this.isLoading = false));
 
@@ -155,3 +237,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+td {
+  padding: 10px;
+  text-align: center;
+}
+</style>
